@@ -6,3 +6,6 @@
 *.sublime-workspace
 *.sublime-project
 games.d/
+
+# Asciiverse build output (asciiverse/build.sh)
+/out/

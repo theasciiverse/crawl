@@ -1,0 +1,45 @@
+# System packages (.deb, .rpm, .apk, Arch) for Dungeon Crawl Stone Soup,
+# console edition, built by nfpm from the same static Linux build as the av
+# archive (out/crawl from asciiverse/build.sh). The release workflow sets
+# VERSION, RELEASE (our packaging release) and ARCH (amd64 or arm64).
+#
+# No .desktop file on purpose: av is the one place titles are started from,
+# so Asciiverse packages never add menu entries (asciiverse/CLAUDE.md).
+#
+# crawl looks for its data beside itself and in ../share/crawl, so
+# /usr/bin/crawl finds /usr/share/crawl. Player files go to
+# $XDG_DATA_HOME/crawl (default ~/.local/share/crawl); nothing is setgid.
+name: crawl
+arch: ${ARCH}
+platform: linux
+version: ${VERSION}
+release: ${RELEASE}
+section: games
+priority: optional
+maintainer: Asciiverse <packages@asciiverse.sh>
+vendor: Asciiverse
+homepage: https://github.com/theasciiverse/crawl
+license: GPL-2.0-or-later
+description: |
+  Dungeon Crawl Stone Soup, the open-source roguelike, in the terminal.
+  Go down through the Dungeon and its branches, find the Orb of Zot and
+  bring it back, with one of 27 species and 26 backgrounds, gods to serve
+  and runes to collect. Console edition, no tiles.
+  By Linley Henzell (1997) and the Stone Soup team since 2006, packaged by
+  Asciiverse.
+contents:
+  - src: out/crawl/crawl
+    dst: /usr/bin/crawl
+    file_info: { mode: 0755 }
+  - src: out/crawl/dat
+    dst: /usr/share/crawl/dat
+  - src: out/crawl/docs
+    dst: /usr/share/crawl/docs
+  - src: out/crawl/settings
+    dst: /usr/share/crawl/settings
+  - src: LICENSE
+    dst: /usr/share/doc/crawl/copyright
+    file_info: { mode: 0644 }
+  - src: crawl-ref/docs/crawl.6
+    dst: /usr/share/man/man6/crawl.6
+    file_info: { mode: 0644 }
