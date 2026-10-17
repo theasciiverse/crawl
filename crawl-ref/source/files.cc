@@ -424,6 +424,11 @@ static vector<string> _get_base_dirs()
 #else
         !SysEnv.crawl_dir.empty()? SysEnv.crawl_dir : "",
         !SysEnv.crawl_base.empty()? SysEnv.crawl_base : "",
+#ifdef UNIX
+        // Asciiverse: a system package puts the binary in /usr/bin and the
+        // data in /usr/share/crawl; an av install keeps it beside the binary.
+        !SysEnv.crawl_base.empty()? SysEnv.crawl_base + "../share/crawl/" : "",
+#endif
 #endif
 #ifdef TARGET_OS_MACOSX
         SysEnv.crawl_base + "../Resources/",

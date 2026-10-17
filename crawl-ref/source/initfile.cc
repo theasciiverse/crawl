@@ -92,6 +92,8 @@
 #elif defined(TARGET_OS_MACOSX)
 extern char **NXArgv;
 #include <unistd.h>
+#include <climits>
+#include <mach-o/dyld.h>
 #elif defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 #include <unistd.h>
 #endif
@@ -1538,7 +1540,9 @@ void game_options::reset_paths()
     {
         macro_dir_option = ""; // maybe unnecessary?
 #ifdef UNIX
-        macro_dir = _user_home_subpath(".crawl");
+        // Asciiverse: macros beside the other player files in crawl_dir
+        // (the XDG data folder), not in ~/.crawl.
+        macro_dir = _get_save_path("");
 #else
         macro_dir = "settings/";
 #endif
@@ -4688,6 +4692,20 @@ void get_system_environment()
     // This should end with the appropriate path delimiter.
     SysEnv.crawl_dir = check_string(getenv("CRAWL_DIR"));
 
+#if defined(UNIX) && !defined(DGAMELAUNCH) && !defined(SAVE_DIR_PATH)
+    // Asciiverse: the player's files (init.txt, macros, saves, scores,
+    // morgue dumps) live in the XDG data folder, $XDG_DATA_HOME/crawl or
+    // ~/.local/share/crawl, on Linux and macOS alike.
+    if (SysEnv.crawl_dir.empty())
+    {
+        const string xdg = check_string(getenv("XDG_DATA_HOME"));
+        if (!xdg.empty() && xdg[0] == '/')
+            SysEnv.crawl_dir = catpath(mb_to_utf8(xdg), "crawl");
+        else
+            SysEnv.crawl_dir = _user_home_subpath(".local/share/crawl");
+    }
+#endif
+
 #if defined(TARGET_OS_MACOSX) && !defined(DGAMELAUNCH)
     if (SysEnv.crawl_dir.empty())
     {
@@ -4910,6 +4928,18 @@ static string _find_executable_path()
         return "";
 #elif defined (UNIX)
     char tempPath[2048];
+#ifdef TARGET_OS_MACOSX
+    // Asciiverse: macOS has no /proc, and argv[0] may be a bare name or a
+    // symlink (av links ~/.local/bin/crawl to the install folder), so ask
+    // dyld for the binary and resolve links to find the data beside it.
+    uint32_t mac_size = sizeof(tempPath);
+    char mac_real[PATH_MAX];
+    if (_NSGetExecutablePath(tempPath, &mac_size) == 0
+        && realpath(tempPath, mac_real))
+    {
+        return mb_to_utf8(mac_real);
+    }
+#endif
     const ssize_t rsize =
         readlink("/proc/self/exe", tempPath, sizeof(tempPath) - 1);
     if (rsize > 0)
