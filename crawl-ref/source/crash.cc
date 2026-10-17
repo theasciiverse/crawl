@@ -35,6 +35,10 @@
     defined(__ANDROID__)
         #undef BACKTRACE_SUPPORTED
 #endif
+// Asciiverse: musl, which the static Linux builds use, has no execinfo.h
+#if defined(TARGET_OS_LINUX) && !defined(__GLIBC__)
+        #undef BACKTRACE_SUPPORTED
+#endif
 #endif
 
 #ifdef BACKTRACE_SUPPORTED
