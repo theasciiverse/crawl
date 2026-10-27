@@ -1,3 +1,16 @@
+> **Play it with Asciiverse.** With [av](https://asciiverse.sh), the Asciiverse
+> client:
+>
+> ```
+> av install crawl
+> av play crawl
+> ```
+>
+> Or download the archive for your system from this repository's Releases,
+> unpack it and run `./crawl` (`crawl.exe` on Windows).
+>
+> The original README follows.
+
 [![Build Status](https://github.com/crawl/crawl/workflows/Build/badge.svg)](https://github.com/crawl/crawl/actions/)
 
 # Dungeon Crawl Stone Soup

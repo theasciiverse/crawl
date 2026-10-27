@@ -72,3 +72,9 @@ its Makefile.
   in `saves/` and `morgue/` under the folder crawl is started in, which
   av sets to the install folder that an update replaces; they would need
   to move to `%APPDATA%`.
+
+## Ours
+
+- **How to play it, at the top of README.md.** A short note on installing and
+  starting it with av, or from a release archive; the original text follows
+  unchanged.
