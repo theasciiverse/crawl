@@ -6,9 +6,6 @@
 > av play crawl
 > ```
 >
-> Or download the archive for your system from this repository's Releases,
-> unpack it and run `./crawl`.
->
 > The original README follows.
 
 [![Build Status](https://github.com/crawl/crawl/workflows/Build/badge.svg)](https://github.com/crawl/crawl/actions/)
